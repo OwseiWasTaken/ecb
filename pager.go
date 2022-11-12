@@ -1,18 +1,23 @@
-func CodeToString (b uint32) (string) {
+import (
+	"hash/fnv"
+)
+
+func MakeHash(s string) (uint16) {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return uint16(h.Sum32())
+}
+
+func CodeToString (b uint16) (string) {
 	return strconv.Itoa(int(b))
 }
 
-func CodeToFilename (b uint32) (string) {
+func CodeToFilename (b uint16) (string) {
 	return "saved/"+CodeToString(b)+".txt"
 }
 
-//TODO: assert unused
-func GetUnusedCode () (uint32) {
-	return uint32(rint(0, int(U32MAX)))
-}
-
-func save (paste string) (uint32) {
-	code := GetUnusedCode()
+func save (paste string) (uint16) {
+	code := MakeHash(paste)
 	flname := CodeToFilename(code)
 	err := os.WriteFile(flname, []byte(paste), 0644) // 1X 2W 4R
 	panic(err)
@@ -29,7 +34,7 @@ func GetFileCtime(name string) (ctime int64, err error) {
 	return ctime, nil
 }
 
-func load(code uint32) (string, error) {
+func load(code uint16) (string, error) {
 	flname := CodeToFilename(code)
 	p, err := os.ReadFile(flname)
 	return string(p), err

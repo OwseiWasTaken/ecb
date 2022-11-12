@@ -21,7 +21,7 @@ var (
 	red = RGB(255, 0, 0)
 )
 
-func GetCodeHandler(w http.ResponseWriter, sc uint32) {
+func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 	paste, err := load(sc)
 	if err != nil {
 		fprintf(w, "No such Paste %d", sc)
@@ -38,7 +38,7 @@ func HandlerMainPage(w http.ResponseWriter, r *http.Request) {
 	printf("%sclient%s got the main page\n", green, nc)
 }
 
-func HandleShowCode(w http.ResponseWriter, code uint32) {
+func HandleShowCode(w http.ResponseWriter, code uint16) {
 	fprintf(w, "<html><body><p>code: </p><h1>%d</h1></body></html>", code)
 	printf("%sclient%s notified of new paste's code %d\n", green, nc, code)
 }
@@ -58,7 +58,7 @@ func HandleMakePage(w http.ResponseWriter, v string) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	printf("%sclient%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
+	printf("\n%sclient%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
 	if len(r.URL.Path) == 0 {
 		HandlerMainPage(w, r)
 		return
@@ -71,7 +71,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	sc, err := strconv.Atoi(r.URL.Path[1:])
 	if err == nil {
-		GetCodeHandler(w, uint32(sc))
+		GetCodeHandler(w, uint16(sc))
 		return
 	}
 	//TODO: make error page
