@@ -50,7 +50,7 @@ func HandleMakePage(w http.ResponseWriter, v string) {
 		printf("%sclient%s made a new paste %d\n", green, nc, code)
 		HandleShowCode(w, code)
 	} else {
-		printf("%client%s didn't made the paste\n", red, nc)
+		printf("%sclient%s didn't made the paste\n", red, nc)
 		printf("vars: %v\n", vm)
 	}
 }
