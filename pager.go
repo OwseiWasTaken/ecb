@@ -13,6 +13,9 @@ func CodeToString (b uint16) (string) {
 }
 
 func CodeToFilename (b uint16) (string) {
+	if inbin {
+		return "../saved/"+CodeToString(b)+".txt"
+	}
 	return "saved/"+CodeToString(b)+".txt"
 }
 

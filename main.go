@@ -5,11 +5,8 @@ import (
 	"net/url"
 )
 
-include "gutil"
-
-include "pager"
-
 var (
+	inbin bool
 	codebody string
 	mainbody string
 	err error
@@ -18,6 +15,9 @@ var (
 	green = RGB(0, 255, 0)
 	red = RGB(255, 0, 0)
 )
+
+include "gutil"
+include "pager"
 
 func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 	paste, err := load(sc)
@@ -78,6 +78,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main(){
 	InitGu()
+	inbin = !exists("saved/")
 	mainbody = ReadFile("home.html")
 	codebody = ReadFile("code.html")
 	http.HandleFunc("/", handler)
