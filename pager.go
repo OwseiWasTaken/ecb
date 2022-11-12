@@ -18,13 +18,13 @@ func (p *Page) save () {
 }
 
 func GetFileCtime(name string) (ctime int64, err error) {
-    fi, err := os.Stat(name)
-    if err != nil {
-        return
-    }
-    stat := fi.Sys().(*syscall.Stat_t)
-    ctime = int64(stat.Ctim.Sec)
-    return ctime, nil
+	fi, err := os.Stat(name)
+	if err != nil {
+		return
+	}
+	stat := fi.Sys().(*syscall.Stat_t)
+	ctime = int64(stat.Ctim.Sec)
+	return ctime, nil
 }
 
 func load(code uint32) (*Page, error) {
