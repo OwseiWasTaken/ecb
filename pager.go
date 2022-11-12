@@ -24,16 +24,6 @@ func save (paste string) (uint16) {
 	return code
 }
 
-func GetFileCtime(name string) (ctime int64, err error) {
-	fi, err := os.Stat(name)
-	if err != nil {
-		return
-	}
-	stat := fi.Sys().(*syscall.Stat_t)
-	ctime = int64(stat.Ctim.Sec)
-	return ctime, nil
-}
-
 func load(code uint16) (string, error) {
 	flname := CodeToFilename(code)
 	p, err := os.ReadFile(flname)
