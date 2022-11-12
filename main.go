@@ -29,6 +29,8 @@ func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 		return
 	}
 	paste = strings.Replace(paste, "\n", "<br>", -1)
+	paste = strings.Replace(paste, " ", "&nbsp;", -1)
+	paste = strings.Replace(paste, "\t", "&nbsp;&nbsp;", -1)
 	fprintf(w, "<html><body><p>%s</p></body></html>", paste)
 	printf("%sclient%s got paste %d\n", green, nc, sc)
 }
