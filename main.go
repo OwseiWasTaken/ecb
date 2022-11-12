@@ -15,6 +15,8 @@ var (
 	red = RGB(255, 0, 0)
 )
 
+// download gutil.go and gc.py (preprocessor)
+// to easly replace these "include"s
 include "gutil"
 include "pager"
 
