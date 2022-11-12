@@ -7,7 +7,6 @@ import (
 
 var (
 	inbin bool
-	codebody string
 	mainbody string
 	err error
 	cyan = RGB(70, 160, 255)
@@ -26,8 +25,7 @@ func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 		printf("%sclient%s didn't get the paste %d\n", red, nc, sc)
 		return
 	}
-	fprintf(w, codebody, string(paste))
-	//fprintf(w, codebody)
+	fprintf(w, string(paste))
 	printf("%sclient%s got paste %d\n", green, nc, sc)
 }
 
@@ -80,7 +78,6 @@ func main(){
 	InitGu()
 	inbin = !exists("saved/")
 	mainbody = ReadFile("home.html")
-	codebody = ReadFile("code.html")
 	http.HandleFunc("/", handler)
 	PS("server started")
 	http.ListenAndServe(":6969", nil)
