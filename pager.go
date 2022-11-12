@@ -3,7 +3,7 @@ func CodeToString (b uint32) (string) {
 }
 
 func CodeToFilename (b uint32) (string) {
-	return "pastes/"+CodeToString(b)+".txt"
+	return "saved/"+CodeToString(b)+".txt"
 }
 
 //TODO: assert unused
