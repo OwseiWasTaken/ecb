@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/url"
+	"html"
 )
 
 var (
@@ -27,7 +28,7 @@ func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 		printf("%sclient%s didn't get the paste %d\n", red, nc, sc)
 		return
 	}
-	fprintf(w, string(paste))
+	fprintf(w, "<html><body><p>%s</p></body></html>", paste)
 	printf("%sclient%s got paste %d\n", green, nc, sc)
 }
 
@@ -46,7 +47,7 @@ func HandleMakePage(w http.ResponseWriter, v string) {
 	panic(err)
 	paste, ok := vm["paste"]
 	if ok {
-		code := save(paste[0])
+		code := save(html.EscapeString(paste[0]))
 		printf("%sclient%s made a new paste %d\n", green, nc, code)
 		HandleShowCode(w, code)
 	} else {
@@ -78,7 +79,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main(){
 	InitGu()
-	inbin = !exists("saved/")
+	inbin = !exists("./saved/")
+	if inbin {
+		PS("running as inbin")
+	} else {
+		PS("not running as inbin")
+	}
 	mainbody = ReadFile("home.html")
 	http.HandleFunc("/", handler)
 	PS("server started")

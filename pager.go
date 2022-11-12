@@ -22,8 +22,7 @@ func CodeToFilename (b uint16) (string) {
 func save (paste string) (uint16) {
 	code := MakeHash(paste)
 	flname := CodeToFilename(code)
-	err := os.WriteFile(flname, []byte(paste), 0644) // 1X 2W 4R
-	panic(err)
+	WriteFile(flname, paste) // 1X 2W 4R
 	return code
 }
 
