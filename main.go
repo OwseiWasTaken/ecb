@@ -9,6 +9,7 @@ import (
 var (
 	inbin bool
 	mainbody string
+	mainecbbody string
 	err error
 	cyan = RGB(70, 160, 255)
 	nc = RGB(255, 255, 255)
@@ -19,79 +20,35 @@ var (
 // download gutil.go and gc.py (preprocessor)
 // to easly replace these "include"s
 include "gutil"
-include "pager"
+Include "ecb"
 
-func GetCodeHandler(w http.ResponseWriter, sc uint16) {
-	paste, err := load(sc)
-	if err != nil {
-		fprintf(w, "No such Paste %d", sc)
-		printf("%sclient%s didn't get the paste %d\n", red, nc, sc)
-		return
+func MainHandler(w http.ResponseWriter, r *http.Request) {
+	printf("\n%s[MAIN] client%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
+	if len(r.URL.Path) > 3 {
+		if r.URL.Path[:4] == "/ecb" {
+			ecbhandler(w, r)
+			return
+		}
 	}
-	paste = strings.Replace(paste, "\n", "<br>", -1)
-	paste = strings.Replace(paste, " ", "&nbsp;", -1)
-	paste = strings.Replace(paste, "\t", "&nbsp;&nbsp;", -1)
-	fprintf(w, "<html><body><p>%s</p></body></html>", paste)
-	printf("%sclient%s got paste %d\n", green, nc, sc)
-}
 
-func HandlerMainPage(w http.ResponseWriter, r *http.Request) {
+	printf("\n%s[Main] client%s can't satisfy requeste (%s with %s)\n",
+		red, nc, r.URL.Path, r.URL.Query())
 	fprintf(w, mainbody)
-	printf("%sclient%s got the main page\n", green, nc)
-}
-
-func HandleShowCode(w http.ResponseWriter, code uint16) {
-	fprintf(w, "<html><body><p>code: </p><h1>%d</h1></body></html>", code)
-	printf("%sclient%s notified of new paste's code %d\n", green, nc, code)
-}
-
-func HandleMakePage(w http.ResponseWriter, v string) {
-	vm, err := url.ParseQuery(v)
-	panic(err)
-	paste, ok := vm["paste"]
-	if ok {
-		code := save(html.EscapeString(paste[0]))
-		printf("%sclient%s made a new paste %d\n", green, nc, code)
-		HandleShowCode(w, code)
-	} else {
-		printf("%sclient%s didn't made the paste\n", red, nc)
-		printf("vars: %v\n", vm)
-	}
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	printf("\n%sclient%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
-	if len(r.URL.Path) == 0 {
-		HandlerMainPage(w, r)
-		return
-	}
-
-	if r.URL.Path == "/make" {
-		HandleMakePage(w, r.URL.RawQuery)
-		return
-	}
-
-	sc, err := strconv.Atoi(r.URL.Path[1:])
-	if err == nil {
-		GetCodeHandler(w, uint16(sc))
-		return
-	}
-	//TODO: make error page
-	HandlerMainPage(w, r)
 }
 
 func main(){
 	InitGu()
-	inbin = !exists("./saved/")
+	inbin = !exists("./main.go")
 	if inbin {
 		PS("running as inbin")
 	} else {
 		PS("not running as inbin")
 	}
+	mainecbbody = ReadFile("ecb/home.html")
 	mainbody = ReadFile("home.html")
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", MainHandler)
 	PS("server started")
-	http.ListenAndServe(":6969", nil)
+	http.ListenAndServe(":80", nil)
 	exit(0)
 }
 
