@@ -1,5 +1,9 @@
 include "pager"
 
+import (
+	"html"
+)
+
 func GetCodeHandler(w http.ResponseWriter, sc uint16) {
 	paste, err := load(sc)
 	if err != nil {
@@ -24,29 +28,26 @@ func HandleShowCode(w http.ResponseWriter, code uint16) {
 	printf("%s[ECB] client%s notified of new paste's code %d\n", green, nc, code)
 }
 
-func HandleMakePage(w http.ResponseWriter, v string) {
-	vm, err := url.ParseQuery(v)
-	panic(err)
-	paste, ok := vm["paste"]
-	if ok {
+func HandleMakePage(w http.ResponseWriter, paste []string) {
+	if len(paste) != 0 {
 		code := save(html.EscapeString(paste[0]))
 		printf("%s[ECB] client%s made a new paste %d\n", green, nc, code)
 		HandleShowCode(w, code)
 	} else {
-		printf("%s[ECB] client%s didn't made the paste\n", red, nc)
-		printf("vars: %v\n", vm)
+		printf("%s[ECB] client%s didn't made the paste\nno info recieved", red, nc)
 	}
 }
 
-func ecbhandler(w http.ResponseWriter, r *http.Request) {
-	printf("\n%s[ECB] client%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
+func Ecbhandler(w http.ResponseWriter, r *http.Request) {
+	printf("\n%s[ECB] client%s requested %s with (%s, %s)\n",
+		cyan, nc, url, vars, form)
 	if len(r.URL.Path) == 4 {
 		HandlerEcbMainPage(w, r)
 		return
 	}
 
 	if r.URL.Path == "/ecb/make" {
-		HandleMakePage(w, r.URL.RawQuery)
+		HandleMakePage(w, form["cont"])
 		return
 	}
 
