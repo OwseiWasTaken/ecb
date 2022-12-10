@@ -2,8 +2,6 @@ package main
 
 import (
 	"net/http"
-	"net/url"
-	"html"
 )
 
 var (
@@ -18,15 +16,32 @@ var (
 	red = RGB(255, 0, 0)
 )
 
+var (
+	method string
+	form map[string][]string
+	vars map[string][]string
+	url string
+)
+
 // download gutil.go and gc.py (preprocessor)
 // to easly replace these "include"s
 include "gutil"
 Include "ecb"
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
-	printf("\n%s[MAIN] client%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
+	url = r.URL.Path
+	method = r.Method
+	vars = r.URL.Query()
+	form = map[string][]string{}
+	if method == "POST" {
+		r.ParseForm()
+		form = r.Form
+	}
+
+	printf("\n%s[MAIN] client%s requested %s with (%s, %s) as %v\n",
+		cyan, nc, url, vars, form, method)
 	if len(r.URL.Path) == 1 {
-		printf("\n%s[Main] client%s got main page (%s with %s)\n",
+		printf("\n%s[MAIN] client%s got main page (%s with %s)\n",
 			green, nc, r.URL.Path, r.URL.Query())
 		fprintf(w, mainbody)
 		return
@@ -34,18 +49,19 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(r.URL.Path) > 3 {
 		if r.URL.Path[:4] == "/ecb" {
-			ecbhandler(w, r)
+			Ecbhandler(w, r)
 			return
 		}
 	}
 
-	printf("\n%s[Main] client%s can't satisfy request (%s with %s)\n",
+	printf("\n%s[MAIN] client%s can't satisfy request (%s with %s)\n",
 		red, nc, r.URL.Path, r.URL.Query())
 	fprintf(w, mainbody)
 }
 
 func main(){
 	InitGu()
+
 	inbin = !exists("./main.go")
 	if inbin {
 		PS("running as inbin")
@@ -54,9 +70,10 @@ func main(){
 	}
 	mainecbbody = ReadFile("ecb/home.html")
 	mainbody = ReadFile("home.html")
-	http.HandleFunc("/", MainHandler)
+	http.HandleFunc("/", MainHandler);
 	PS("server started")
 	http.ListenAndServe(":80", nil)
+
 	exit(0)
 }
 
