@@ -8,6 +8,7 @@ import (
 
 var (
 	inbin bool
+	port string
 	mainbody string
 	mainecbbody string
 	err error
@@ -24,6 +25,13 @@ Include "ecb"
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	printf("\n%s[MAIN] client%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
+	if len(r.URL.Path) == 1 {
+		printf("\n%s[Main] client%s got main page (%s with %s)\n",
+			green, nc, r.URL.Path, r.URL.Query())
+		fprintf(w, mainbody)
+		return
+	}
+
 	if len(r.URL.Path) > 3 {
 		if r.URL.Path[:4] == "/ecb" {
 			ecbhandler(w, r)
@@ -31,7 +39,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	printf("\n%s[Main] client%s can't satisfy requeste (%s with %s)\n",
+	printf("\n%s[Main] client%s can't satisfy request (%s with %s)\n",
 		red, nc, r.URL.Path, r.URL.Query())
 	fprintf(w, mainbody)
 }
