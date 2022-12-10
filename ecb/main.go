@@ -40,7 +40,7 @@ func HandleMakePage(w http.ResponseWriter, v string) {
 
 func ecbhandler(w http.ResponseWriter, r *http.Request) {
 	printf("\n%s[ECB] client%s requested %s with %s\n", cyan, nc, r.URL.Path, r.URL.Query())
-	if len(r.URL.Path) == 0 {
+	if len(r.URL.Path) == 4 {
 		HandlerEcbMainPage(w, r)
 		return
 	}
@@ -57,8 +57,9 @@ func ecbhandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
 	//TODO: make error page
-	printf("\n%s[ECB] client%s can't satisfy requeste (%s with %s)\n",
+	printf("\n%s[ECB] client%s can't satisfy request (%s with %s)\n",
 		red, nc, r.URL.Path, r.URL.Query())
 	HandlerEcbMainPage(w, r)
 }
