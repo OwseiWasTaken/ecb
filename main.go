@@ -41,7 +41,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	printf("\n%s[MAIN] client%s requested %s with (%s, %s) as %v\n",
 		cyan, nc, url, vars, form, method)
 	if len(r.URL.Path) == 1 {
-		printf("\n%s[MAIN] client%s got main page (%s with %s)\n",
+		printf("→ %s[MAIN] client%s got main page (%s with %s)\n",
 			green, nc, r.URL.Path, r.URL.Query())
 		fprintf(w, mainbody)
 		return
@@ -54,7 +54,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	printf("\n%s[MAIN] client%s can't satisfy request (%s with %s)\n",
+	printf("→ %s[MAIN] client%s can't satisfy request (%s with %s)\n",
 		red, nc, r.URL.Path, r.URL.Query())
 	fprintf(w, mainbody)
 }
