@@ -51,12 +51,26 @@ func Ecbhandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if id, ok := vars["id"]; ok { // id, not from link, from input submit
+		sc, err := strconv.Atoi(id[0])
+		if err == nil {
+			GetCodeHandler(w, uint16(sc))
+		} else {
+			printf("\n%s[ECB] can't transform id `%s` into int\n",
+			red, nc, r.URL.Path[5:])
+		}
+		return
+	}
+
 	if len(r.URL.Path) > 5 {
 		sc, err := strconv.Atoi(r.URL.Path[5:])
 		if err == nil {
 			GetCodeHandler(w, uint16(sc))
-			return
+		} else {
+			printf("\n%s[ECB] can't transform id %s into int\n",
+			red, nc, r.URL.Path[5:])
 		}
+		return
 	}
 
 	//TODO: make error page

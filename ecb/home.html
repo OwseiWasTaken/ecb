@@ -3,10 +3,15 @@
 		<h1>
 			Easy ClipBoard
 		</h1>
-		<form action="/ecb/make" method="post">
+		<form action="/ecb/make/" method="post">
 			<label for="POST">content:</label>
 			<textarea id="paste id" name="cont"></textarea>
 			<input type="submit" value="Submit">
+		</form>
+		<form action="/ecb/" method="get">
+			<label for="GET">id:</label>
+			<input id="copy id" name="id"></input>
+			<input type="submit" value="Search">
 		</form>
 	</body>
 </html>
