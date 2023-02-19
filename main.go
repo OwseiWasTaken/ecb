@@ -27,6 +27,7 @@ var (
 // to easly replace these "include"s
 include "gutil"
 Include "ecb"
+Include "mine"
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	url = r.URL.Path
@@ -49,9 +50,11 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(r.URL.Path) > 3 {
 		if r.URL.Path[:4] == "/ecb" {
-			Ecbhandler(w, r)
-			return
+			EcbHandler(w, r)
+		} else if r.URL.Path[:5] == "/mine" {
+			MineHandler(w, r)
 		}
+		return
 	}
 
 	printf("→ %s[MAIN] client%s can't satisfy request (%s with %s)\n",
@@ -62,7 +65,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 func main(){
 	InitGu()
 
-	inbin = !exists("./main.go")
+	inbin = !Exists("./main.go")
 	if inbin {
 		PS("running as inbin")
 	} else {
@@ -71,9 +74,12 @@ func main(){
 	mainecbbody = ReadFile("ecb/home.html")
 	mainbody = ReadFile("home.html")
 	http.HandleFunc("/", MainHandler);
+	go http.ListenAndServe(":80", nil)
 	PS("server started")
-	http.ListenAndServe(":80", nil)
+	for {
+	Input("")
+	}
 
-	exit(0)
+	Exit(0)
 }
 

@@ -1,0 +1,65 @@
+<html>
+	<head>
+	<script>
+// scriṕt tag, I ain't making no filesystem now
+
+//TODO: a better way of doing this
+// make a single map and invert
+
+const alphaToGal = {
+	A:'ᔑ', B:'ʖ', C:'ᓵ', D:'↸',
+	E:'ᒷ', F:'⎓', G:'⊣', H:'⍑',
+	I:'╎', J:'⋮', K:'ꖌ', L:'ꖎ',
+	M:'ᒲ', N:'リ',O:'J', P:'!',
+	Q:'ᑑ', R:'∷', S:'ᓭ', T:'ℸ',
+	U:'⚍', V:'⍊', W:'∴', X:'/',
+	Y:'ǁ', Z:'⨅',
+}
+
+const galToAlpha = {
+	'ᔑ':'A', 'ʖ':'B', 'ᓵ':'C', '↸':'D',
+	'ᒷ':'E', '⎓':'F', '⊣':'G', '⍑':'H',
+	'╎':'I', '⋮':'J', 'ꖌ':'K', 'ꖎ':'L',
+	'ᒲ':'M', 'リ':'N','J':'O', '!':'P',
+	'ᑑ':'Q', '∷':'R', 'ᓭ':'S', 'ℸ':'T',
+	'⚍':'U', '⍊':'V', '∴':'W', '/':'X',
+	'ǁ':'Y', '⨅':'Z',
+}
+
+transform=(map)=>{
+	return () => {
+		id("textOut").innerHTML = "translation<br>"+translate(id("textIn").value.split(""), map)
+	}
+}
+
+translate=(txt, mp)=>{
+	let t = ''
+	for (let i = 0; i<txt.length; i++) {
+		t = mp[txt[i].toUpperCase()]
+		if (t !== undefined) {txt[i] = t}
+		else console.log(txt[i])
+	}
+	return txt.join("")
+}
+
+id=(eid)=>{return document.getElementById(eid);}
+
+window.onload = () => {
+	id("encrypt").onclick = transform(alphaToGal);
+	id("decrypt").onclick = transform(galToAlpha);
+}
+	</script>
+	</head>
+
+	<body>
+		<h1>
+			Standard Galactic Alphabet
+		</h1>
+		<textarea id="textIn" name="cont"></textarea>
+		<span>
+		<button id="encrypt">encrypt</button>
+		<button id="decrypt">decrypt</button>
+		</span>
+		<p id="textOut">translation</p>
+	</body>
+</html>

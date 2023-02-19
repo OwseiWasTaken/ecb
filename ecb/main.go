@@ -38,7 +38,7 @@ func HandleMakePage(w http.ResponseWriter, paste []string) {
 	}
 }
 
-func Ecbhandler(w http.ResponseWriter, r *http.Request) {
+func EcbHandler(w http.ResponseWriter, r *http.Request) {
 	printf("→ %s[ECB] client%s requested %s with (%s, %s)\n",
 		cyan, nc, url, vars, form)
 	if len(r.URL.Path) == 4 {
