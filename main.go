@@ -30,6 +30,8 @@ Include "ecb"
 Include "mine"
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	url = r.URL.Path
 	method = r.Method
 	vars = r.URL.Query()
